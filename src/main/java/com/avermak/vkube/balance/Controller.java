@@ -3,10 +3,14 @@ package com.avermak.vkube.balance;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
@@ -40,8 +44,8 @@ public class Controller implements Runnable {
     public void initialize() {
         System.out.println("Initializing Controller");
 
-        this.config = new Config("192.168.1.80", 443, true, 500);
-        this.config.setWarmupCount(3);
+        this.config = new Config("192.168.1.80", 443, true, 3000);
+        this.config.setWarmupCount(1);
 
         System.out.println("Initializing Charts");
         this.nodeHitDataREST = new NodeHitData();
@@ -186,9 +190,22 @@ public class Controller implements Runnable {
                 var xyData = new XYChart.Data<>(nodeName, hits);
                 seriesData.add(xyData);
                 xyData.getNode().setStyle("-fx-bar-fill:#"+ChartNodeColors.getBarColor(nodeName)+";");
+                displayLabelForBar(xyData);
             } else {
                 seriesData.get(nodeIndex).setYValue(hits);
             }
         }
+    }
+
+    private void displayLabelForBar(XYChart.Data<String, Integer> data) {
+        final Node node = data.getNode();
+        final Text valueLabel = new Text(data.getYValue() + "");
+        valueLabel.setStroke(Paint.valueOf("#f0f0f0"));
+        ((Group)node.getParent()).getChildren().add(valueLabel);
+        node.boundsInParentProperty().addListener((ov, oldBounds, bounds) -> {
+            valueLabel.setText(data.getYValue() + "");
+            valueLabel.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 - valueLabel.prefWidth(-1) / 2));
+            valueLabel.setLayoutY(Math.round(bounds.getMinY() + valueLabel.prefHeight(-1)));
+        });
     }
 }

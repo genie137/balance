@@ -3,8 +3,8 @@ package com.avermak.vkube.balance;
 import java.util.HashMap;
 
 public class ChartNodeColors {
-    private static final String[] BAR_COLORS = {"FF4444", "00CF05", "0076CF", "CF6300", "A600CF", "009ACF"};
-    private static HashMap<String, String> barColors = new HashMap<>();
+    private static final String[] BAR_COLORS = {"FF4444", "00AF05", "0076CF", "CF6300", "A600CF", "009ACF"};
+    private static final HashMap<String, String> barColors = new HashMap<>();
     /**
      * @return #rrggbb
      */
