@@ -10,8 +10,8 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 
 public class APIRunnerREST extends APIRunner {
-    public APIRunnerREST(Config cfg, NodeHitData hdata, ResponseTimeData rdata, int thinkTime) {
-        super(cfg, hdata, rdata, thinkTime);
+    public APIRunnerREST(Config cfg, NodeHitData hdata, ResponseTimeData rdata) {
+        super(cfg, hdata, rdata);
         if (cfg.usesTLS()) {
             bypassTLSCertCheck();
         }

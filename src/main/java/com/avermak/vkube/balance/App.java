@@ -11,7 +11,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1400, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1400, 750);
         stage.setTitle("Balance - The Load Balancing Tester");
         stage.centerOnScreen();
         stage.setScene(scene);

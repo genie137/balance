@@ -9,8 +9,8 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 public class APIRunnerGRPC extends APIRunner {
     volatile HelloVKubeServiceGrpc.HelloVKubeServiceBlockingStub stub = null;
 
-    public APIRunnerGRPC(Config cfg, NodeHitData hitData, ResponseTimeData resData, int thinkTime) {
-        super(cfg, hitData, resData, thinkTime);
+    public APIRunnerGRPC(Config cfg, NodeHitData hitData, ResponseTimeData resData) {
+        super(cfg, hitData, resData);
     }
 
     @Override

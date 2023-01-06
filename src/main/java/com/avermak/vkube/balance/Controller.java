@@ -29,7 +29,6 @@ public class Controller implements Runnable {
     private APIRunnerREST runnerREST = null;
     private APIRunnerGRPC runnerGRPC = null;
     private Thread uiUpdater = null;
-    private boolean shouldRun = false;
     NodeHitData nodeHitDataREST = null;
     NodeHitData nodeHitDataGRPC = null;
     ResponseTimeData responseTimeDataREST = null;
@@ -42,6 +41,7 @@ public class Controller implements Runnable {
         System.out.println("Initializing Controller");
 
         this.config = new Config("192.168.1.80", 443, true, 500);
+        this.config.setWarmupCount(3);
 
         System.out.println("Initializing Charts");
         this.nodeHitDataREST = new NodeHitData();
@@ -54,11 +54,11 @@ public class Controller implements Runnable {
         nodeHitChartGRPC.setLegendVisible(false);
         nodeHitChartGRPC.getData().add(series);
 
-        this.responseTimeDataREST = new ResponseTimeData();
+        this.responseTimeDataREST = new ResponseTimeData("REST");
         responseTimeChartREST.setLegendVisible(false);
         responseTimeChartREST.setCreateSymbols(false);
 
-        this.responseTimeDataGRPC = new ResponseTimeData();
+        this.responseTimeDataGRPC = new ResponseTimeData("gRPC");
         responseTimeChartGRPC.setLegendVisible(false);
         responseTimeChartGRPC.setCreateSymbols(false);
 
@@ -102,8 +102,8 @@ public class Controller implements Runnable {
             buttonStartStop.setUserData("stopped");
         } else {
             System.out.println("Creating API runner threads");
-            this.runnerREST = new APIRunnerREST(this.config, this.nodeHitDataREST, this.responseTimeDataREST, 500);
-            this.runnerGRPC = new APIRunnerGRPC(this.config, this.nodeHitDataGRPC, this.responseTimeDataGRPC, 500);
+            this.runnerREST = new APIRunnerREST(this.config, this.nodeHitDataREST, this.responseTimeDataREST);
+            this.runnerGRPC = new APIRunnerGRPC(this.config, this.nodeHitDataGRPC, this.responseTimeDataGRPC);
             System.out.println("Setting action button states");
             buttonSave.setDisable(true);
             buttonExit.setDisable(true);
@@ -128,15 +128,10 @@ public class Controller implements Runnable {
             long now = System.currentTimeMillis();
             if (now - lastUIUpdateAt > this.updateInterval) {
                 Platform.runLater(() -> {
-//                    System.out.println("HIT_DATA-REST: " + nodeHitDataREST);
                     updateHitChart(nodeHitChartREST, nodeHitDataREST);
-//                    System.out.println("HIT_DATA-gRPC: " + nodeHitDataGRPC);
                     updateHitChart(nodeHitChartGRPC, nodeHitDataGRPC);
-//                    System.out.println("RT_DATA-gRPC: " + responseTimeDataREST);
                     updateResponseTimeChart(responseTimeChartREST, responseTimeDataREST);
-//                    System.out.println("RT_DATA-gRPC: " + responseTimeDataGRPC);
                     updateResponseTimeChart(responseTimeChartGRPC, responseTimeDataGRPC);
-//                    System.out.println("----");
                 });
                 lastUIUpdateAt = now;
             }
@@ -145,7 +140,6 @@ public class Controller implements Runnable {
     }
 
     private void updateResponseTimeChart(LineChart<Integer, Integer> chart, ResponseTimeData data) {
-        int seriesCount = chart.getData().size();
         ArrayList<String> nodeNamesRendered = new ArrayList<>();
         for (var series : chart.getData()) {
             nodeNamesRendered.add(series.getName());
@@ -169,7 +163,7 @@ public class Controller implements Runnable {
             }
             var responseTimes = data.getResponseTimes(nodeNameAvailable);
             for (var r : responseTimes) {
-                series.getData().add(new XYChart.Data<>(r.dt/1000, r.responseTime));
+                series.getData().add(new XYChart.Data<>(r.dt, r.responseTime));
             }
         }
     }

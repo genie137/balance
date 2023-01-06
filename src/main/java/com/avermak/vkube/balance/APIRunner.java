@@ -3,6 +3,7 @@ package com.avermak.vkube.balance;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public abstract class APIRunner extends Thread {
     protected boolean shouldRun = true;
@@ -12,7 +13,7 @@ public abstract class APIRunner extends Thread {
 
     private int sampleCount = 0;
 
-    public APIRunner(Config cfg, NodeHitData hdata, ResponseTimeData rdata, int thinkTime) {
+    public APIRunner(Config cfg, NodeHitData hdata, ResponseTimeData rdata) {
         this.config = cfg;
         this.hdata = hdata;
         this.rdata = rdata;
@@ -42,7 +43,7 @@ public abstract class APIRunner extends Thread {
 
     protected void recordHitData(String nodeName, int responseTime) {
         if (this.sampleCount < this.config.getWarmupCount()) {
-            System.out.println(this.getClass().getName() + ": Hit sample skipped during warmup (nodeName="+nodeName+", responseTime="+responseTime+")");
+            System.out.println("[Hit] [" + this.getClass().getSimpleName() + "]: (*skipped during warmup): nodeName="+nodeName+", responseTime="+responseTime);
         } else {
             hdata.incrementHit(nodeName);
             rdata.addHitResponse(nodeName, responseTime);
@@ -63,6 +64,6 @@ public abstract class APIRunner extends Thread {
         while ((bread = stream.read(buf)) != -1) {
             baos.write(buf, 0, bread);
         }
-        return new String(baos.toByteArray(), "UTF-8");
+        return baos.toString(StandardCharsets.UTF_8);
     }
 }

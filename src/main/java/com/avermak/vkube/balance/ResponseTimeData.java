@@ -12,8 +12,10 @@ public class ResponseTimeData {
     }
     private Hashtable<String, ArrayList<ResponseTime>> data = null;
     private long firstSampleTime = 0;
+    private String name = "";
 
-    public ResponseTimeData() {
+    public ResponseTimeData(String name) {
+        this.name = name;
         this.data = new Hashtable<>();
     }
     public synchronized void addHitResponse(String nodeName, int responseMS) {
@@ -28,6 +30,7 @@ public class ResponseTimeData {
         }
         int dt = (int)(t - firstSampleTime);
         nodeData.add(new ResponseTime(dt, responseMS));
+        System.out.println("[" + this.name + "]\tnodeName="+nodeName+"\telapsedTime="+dt+"\tresponseTime="+responseMS);
     }
 
     public synchronized ArrayList<ResponseTime> getResponseTimes(String nodeName) {
