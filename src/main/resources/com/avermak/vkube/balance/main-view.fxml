@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.control.Separator?>
+<GridPane alignment="TOP_CENTER" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.avermak.vkube.balance.Controller">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label text="Info:" id="infoLabel" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-font-size:14;" prefWidth="Infinity" />
+    <Separator GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" prefWidth="Infinity" />
+    <BarChart fx:id="nodeHitChartREST" GridPane.rowIndex="2" GridPane.columnIndex="0" title="Hits by Node (REST)" barGap="10">
+        <xAxis>
+            <CategoryAxis id="categoryAxis" label="Node" side="BOTTOM" animated="false" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis id="numberAxis" label="Hits" autoRanging="true" maxHeight="10" side="LEFT" animated="true" />
+        </yAxis>
+    </BarChart>
+    <LineChart fx:id="responseTimeChartREST" GridPane.rowIndex="2" GridPane.columnIndex="1" title="Response time by Node (REST)">
+        <xAxis>
+            <NumberAxis id="timeAxis" label="Elapsed Time (s)" side="BOTTOM" animated="true" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />
+        </yAxis>
+    </LineChart>
+    <BarChart fx:id="nodeHitChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="0" title="Hits by Node (gRPC)" barGap="10">
+        <xAxis>
+            <CategoryAxis id="categoryAxis" label="Node" side="BOTTOM" animated="false" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis id="numberAxis" label="Hits" autoRanging="true" maxHeight="10" side="LEFT" animated="true" />
+        </yAxis>
+    </BarChart>
+    <LineChart fx:id="responseTimeChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="1" title="Response time by Node (gRPC)">
+        <xAxis>
+            <NumberAxis id="timeAxis" label="Elapsed Time (s)" side="BOTTOM" animated="true" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />
+        </yAxis>
+    </LineChart>
+    <Separator GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2" prefWidth="Infinity" />
+    <ButtonBar GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <buttons>
+            <Button fx:id="buttonStartStop" text="Start" onAction="#startStop" />
+            <Button fx:id="buttonSave" text="Save" />
+            <Button fx:id="buttonExit" text="Exit" onAction="#exit" />
+        </buttons>
+    </ButtonBar>
+</GridPane>
