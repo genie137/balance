@@ -15,13 +15,11 @@ public class APIRunnerGRPC extends APIRunner {
 
     @Override
     public void call() {
-        System.out.println("Invoking stub method sayHello");
         long start = System.currentTimeMillis();
         HelloReply reply = getStub().sayHello(HelloRequest.newBuilder().setName("grpc-world").build());
         long end = System.currentTimeMillis();
         String nodeName = reply.getNodeName();
-        hdata.incrementHit(nodeName);
-        rdata.addHitResponse(nodeName, (int) (end - start));
+        recordHitData(nodeName, (int)(end-start));
     }
     private HelloVKubeServiceGrpc.HelloVKubeServiceBlockingStub getStub() {
         if (this.stub == null) {

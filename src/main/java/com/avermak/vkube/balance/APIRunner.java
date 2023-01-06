@@ -10,6 +10,8 @@ public abstract class APIRunner extends Thread {
     protected NodeHitData hdata = null;
     protected ResponseTimeData rdata = null;
 
+    private int sampleCount = 0;
+
     public APIRunner(Config cfg, NodeHitData hdata, ResponseTimeData rdata, int thinkTime) {
         this.config = cfg;
         this.hdata = hdata;
@@ -36,6 +38,16 @@ public abstract class APIRunner extends Thread {
             }
             try {Thread.sleep(this.config.getThinkTime());} catch (InterruptedException iex) {}
         }
+    }
+
+    protected void recordHitData(String nodeName, int responseTime) {
+        if (this.sampleCount < this.config.getWarmupCount()) {
+            System.out.println(this.getClass().getName() + ": Hit sample skipped during warmup (nodeName="+nodeName+", responseTime="+responseTime+")");
+        } else {
+            hdata.incrementHit(nodeName);
+            rdata.addHitResponse(nodeName, responseTime);
+        }
+        this.sampleCount++;
     }
 
     protected abstract void call() throws Exception;

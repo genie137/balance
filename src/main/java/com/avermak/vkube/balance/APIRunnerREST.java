@@ -32,8 +32,7 @@ public class APIRunnerREST extends APIRunner {
                 Gson gson = new Gson();
                 HashMap reply = gson.fromJson(res, HashMap.class);
                 String nodeName = (String) reply.get("nodeName");
-                this.hdata.incrementHit(nodeName);
-                this.rdata.addHitResponse(nodeName, (int) (end - start));
+                recordHitData(nodeName, (int)(end-start));
             } catch (Exception ex) {
                 System.out.println("Error processing json response. Dumping raw response text.\n"+res);
                 throw ex;

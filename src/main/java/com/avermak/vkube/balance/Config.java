@@ -5,6 +5,7 @@ public class Config {
     private int port = 0;
     private boolean useTLS = true;
     private int thinkTime = 500;
+    private int warmupCount = 3;
 
     public Config(String host, int port, boolean useTLS, int thinkTime) {
         this.host = host;
@@ -44,4 +45,12 @@ public class Config {
     public void setThinkTime(int thinkTime) {
         this.thinkTime = thinkTime;
     }
+
+    public int getWarmupCount() {
+        return warmupCount;
+    }
+    public void setWarmupCount(int warmupCount) {
+        this.warmupCount = warmupCount;
+    }
+
 }
