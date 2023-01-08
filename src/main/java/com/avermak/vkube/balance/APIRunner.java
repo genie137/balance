@@ -7,14 +7,12 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class APIRunner extends Thread {
     protected boolean shouldRun = true;
-    Config config = null;
     protected NodeHitData hdata = null;
     protected ResponseTimeData rdata = null;
 
     private int sampleCount = 0;
 
-    public APIRunner(Config cfg, NodeHitData hdata, ResponseTimeData rdata) {
-        this.config = cfg;
+    public APIRunner(NodeHitData hdata, ResponseTimeData rdata) {
         this.hdata = hdata;
         this.rdata = rdata;
     }
@@ -37,12 +35,12 @@ public abstract class APIRunner extends Thread {
                 System.out.println("Too many errors in " + getClass().getName() + ". Stopping run.");
                 shouldRun = false;
             }
-            try {Thread.sleep(this.config.getThinkTime());} catch (InterruptedException iex) {}
+            try {Thread.sleep(Config.getInstance().getThinkTime());} catch (InterruptedException iex) {}
         }
     }
 
     protected void recordHitData(String nodeName, int responseTime) {
-        if (this.sampleCount < this.config.getWarmupCount()) {
+        if (this.sampleCount < Config.getInstance().getWarmupCount()) {
             System.out.println("[Hit] [" + this.getClass().getSimpleName() + "]: (*skipped during warmup): nodeName="+nodeName+", responseTime="+responseTime);
         } else {
             hdata.incrementHit(nodeName);

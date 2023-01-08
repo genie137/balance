@@ -7,8 +7,12 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
@@ -22,13 +26,23 @@ public class Controller implements Runnable {
     @FXML
     private LineChart<Integer, Integer> responseTimeChartREST;
     @FXML
+    public NumberAxis responseTimeChartRESTTimeAxis;
+    @FXML
     private LineChart<Integer, Integer> responseTimeChartGRPC;
+    @FXML
+    public NumberAxis responseTimeChartGRPCTimeAxis;
     @FXML
     private Button buttonStartStop;
     @FXML
-    private Button buttonSave;
-    @FXML
     private Button buttonExit;
+    @FXML
+    public TextField tfRESTURL;
+    @FXML
+    public TextField tfGRPCURL;
+    @FXML
+    public CheckBox cbDemoMode;
+    @FXML
+    public Label infoLabel;
 
     private APIRunnerREST runnerREST = null;
     private APIRunnerGRPC runnerGRPC = null;
@@ -38,14 +52,13 @@ public class Controller implements Runnable {
     ResponseTimeData responseTimeDataREST = null;
     ResponseTimeData responseTimeDataGRPC = null;
     int updateInterval = 1000; // ms
-    Config config = null;
 
     @FXML
     public void initialize() {
         System.out.println("Initializing Controller");
 
-        this.config = new Config("192.168.1.80", 443, true, 3000);
-        this.config.setWarmupCount(1);
+        System.out.println("Initializing config");
+        Config config = Config.getInstance();
 
         System.out.println("Initializing Charts");
         this.nodeHitDataREST = new NodeHitData();
@@ -61,21 +74,37 @@ public class Controller implements Runnable {
         this.responseTimeDataREST = new ResponseTimeData("REST");
         responseTimeChartREST.setLegendVisible(false);
         responseTimeChartREST.setCreateSymbols(false);
+        responseTimeChartRESTTimeAxis.setTickLabelFormatter(new TimeAxisLabelConverter());
 
         this.responseTimeDataGRPC = new ResponseTimeData("gRPC");
         responseTimeChartGRPC.setLegendVisible(false);
         responseTimeChartGRPC.setCreateSymbols(false);
+        responseTimeChartGRPCTimeAxis.setTickLabelFormatter(new TimeAxisLabelConverter());
 
         System.out.println("Starting UI Updater thread");
         this.uiUpdater = new Thread(this);
         this.uiUpdater.setDaemon(true);
         this.uiUpdater.start();
 
-        System.out.println("Initializing action buttons");
+        System.out.println("Initializing UI elements");
         buttonStartStop.setText("Start");
         buttonStartStop.setUserData("stopped");
 
-        System.out.println("Controller initialization complete.");
+        tfRESTURL.setText(config.getUrlREST());
+        tfGRPCURL.setText(config.getUrlGRPC());
+        cbDemoMode.setSelected(config.isDemoMode());
+
+        tfRESTURL.textProperty().addListener((observable, oldValue, newValue) -> {
+            Config.getInstance().setUrlREST(newValue);
+        });
+        tfGRPCURL.textProperty().addListener((observable, oldValue, newValue) -> {
+            Config.getInstance().setUrlGRPC(newValue);
+        });
+        cbDemoMode.setOnAction(event -> {
+            Config.getInstance().setDemoMode(cbDemoMode.isSelected());
+            tfRESTURL.setDisable(cbDemoMode.isSelected());
+            tfGRPCURL.setDisable(cbDemoMode.isSelected());
+        });
     }
 
     public void exit(ActionEvent actionEvent) {
@@ -101,18 +130,22 @@ public class Controller implements Runnable {
             }
             System.out.println("Resetting action button states");
             buttonExit.setDisable(false);
-            buttonSave.setDisable(false);
             buttonStartStop.setText("Start");
             buttonStartStop.setUserData("stopped");
+            tfRESTURL.setDisable(false);
+            tfGRPCURL.setDisable(false);
+            cbDemoMode.setDisable(false);
         } else {
             System.out.println("Creating API runner threads");
-            this.runnerREST = new APIRunnerREST(this.config, this.nodeHitDataREST, this.responseTimeDataREST);
-            this.runnerGRPC = new APIRunnerGRPC(this.config, this.nodeHitDataGRPC, this.responseTimeDataGRPC);
+            this.runnerREST = new APIRunnerREST(this.nodeHitDataREST, this.responseTimeDataREST);
+            this.runnerGRPC = new APIRunnerGRPC(this.nodeHitDataGRPC, this.responseTimeDataGRPC);
             System.out.println("Setting action button states");
-            buttonSave.setDisable(true);
             buttonExit.setDisable(true);
             buttonStartStop.setText("Stop");
             buttonStartStop.setUserData("running");
+            tfRESTURL.setDisable(true);
+            tfGRPCURL.setDisable(true);
+            cbDemoMode.setDisable(true);
             System.out.println("Waking up UI updater thread");
             this.uiUpdater.interrupt();
             System.out.println("Starting runner threads.");
@@ -201,6 +234,8 @@ public class Controller implements Runnable {
         final Node node = data.getNode();
         final Text valueLabel = new Text(data.getYValue() + "");
         valueLabel.setStroke(Paint.valueOf("#f0f0f0"));
+        valueLabel.setStrokeWidth(1);
+        valueLabel.setStyle("-fx-font-size:10pt;");
         ((Group)node.getParent()).getChildren().add(valueLabel);
         node.boundsInParentProperty().addListener((ov, oldBounds, bounds) -> {
             valueLabel.setText(data.getYValue() + "");

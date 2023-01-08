@@ -10,18 +10,24 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 
 public class APIRunnerREST extends APIRunner {
-    public APIRunnerREST(Config cfg, NodeHitData hdata, ResponseTimeData rdata) {
-        super(cfg, hdata, rdata);
-        if (cfg.usesTLS()) {
+    public APIRunnerREST(NodeHitData hdata, ResponseTimeData rdata) {
+        super(hdata, rdata);
+        String urlStr = Config.getInstance().getUrlREST();
+        boolean tls = urlStr.toLowerCase().startsWith("https://");
+        if (tls) {
             bypassTLSCertCheck();
         }
     }
 
     @Override
     public void call() throws Exception {
+        if (Config.getInstance().isDemoMode()) {
+            recordHitData("Node0" + random(1, 3), random(10, 50));
+            return;
+        }
         InputStream istream = null;
         try {
-            String urlStr = "http" + (this.config.usesTLS() ? "s" : "") + "://" + this.config.getHost() + ":" + this.config.getPort() + "/hello/api?name=lbtester";
+            String urlStr = Config.getInstance().getUrlREST();
             URL url = new URL(urlStr);
             long start = System.currentTimeMillis();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
