@@ -93,6 +93,8 @@ public class Controller implements Runnable {
         tfRESTURL.setText(config.getUrlREST());
         tfGRPCURL.setText(config.getUrlGRPC());
         cbDemoMode.setSelected(config.isDemoMode());
+        tfRESTURL.setDisable(config.isDemoMode());
+        tfGRPCURL.setDisable(config.isDemoMode());
 
         tfRESTURL.textProperty().addListener((observable, oldValue, newValue) -> {
             Config.getInstance().setUrlREST(newValue);

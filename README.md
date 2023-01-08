@@ -4,6 +4,8 @@
 Graphical interface to display real-time load balancing behavior of API endpoint deployed in a cluster.
 Uses the [vkube-hello](https://github.com/avermak/vkube-hello) repo as the provider for REST+gRPC endpoints.
 
+![Runtime screenshot](docs/balance.png)
+
 ## Prerequisites
 - The helloworld API provided by the [vkube-hello](https://github.com/avermak/vkube-hello) repository must be deployed
   in a cluster.

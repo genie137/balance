@@ -31,7 +31,7 @@
     </BarChart>
     <LineChart fx:id="responseTimeChartREST" GridPane.rowIndex="2" GridPane.columnIndex="1" title="Response time by Node (REST)">
         <xAxis>
-            <NumberAxis fx:id="responseTimeChartRESTTimeAxis" label="Elapsed Time (ms)" side="BOTTOM" animated="true" />
+            <NumberAxis fx:id="responseTimeChartRESTTimeAxis" label="Elapsed Time (hh:mm:ss)" side="BOTTOM" animated="true" />
         </xAxis>
         <yAxis>
             <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />
@@ -47,7 +47,7 @@
     </BarChart>
     <LineChart fx:id="responseTimeChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="1" title="Response time by Node (gRPC)">
         <xAxis>
-            <NumberAxis fx:id="responseTimeChartGRPCTimeAxis" label="Elapsed Time (ms)" side="BOTTOM" animated="true" />
+            <NumberAxis fx:id="responseTimeChartGRPCTimeAxis" label="Elapsed Time (hh:mm:ss)" side="BOTTOM" animated="true" />
         </xAxis>
         <yAxis>
             <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />
