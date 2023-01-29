@@ -21,7 +21,7 @@
 
     <Label text="" fx:id="infoLabel" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-font-size:14;" prefWidth="Infinity" />
     <Separator GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" prefWidth="Infinity" />
-    <BarChart fx:id="nodeHitChartREST" GridPane.rowIndex="2" GridPane.columnIndex="0" title="Hits by Node (REST)" barGap="10">
+    <BarChart fx:id="nodeHitChartREST" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" title="Hits by Node (REST)" barGap="10">
         <xAxis>
             <CategoryAxis id="categoryAxis" label="Node" side="BOTTOM" animated="false" />
         </xAxis>
@@ -29,39 +29,39 @@
             <NumberAxis id="numberAxis" label="Hits" autoRanging="true" maxHeight="10" side="LEFT" animated="true" />
         </yAxis>
     </BarChart>
-    <LineChart fx:id="responseTimeChartREST" GridPane.rowIndex="2" GridPane.columnIndex="1" title="Response time by Node (REST)">
-        <xAxis>
-            <NumberAxis fx:id="responseTimeChartRESTTimeAxis" label="Elapsed Time (hh:mm:ss)" side="BOTTOM" animated="true" />
-        </xAxis>
-        <yAxis>
-            <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />
-        </yAxis>
-    </LineChart>
-    <BarChart fx:id="nodeHitChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="0" title="Hits by Node (gRPC)" barGap="10">
-        <xAxis>
-            <CategoryAxis id="categoryAxis" label="Node" side="BOTTOM" animated="false" />
-        </xAxis>
-        <yAxis>
-            <NumberAxis id="numberAxis" label="Hits" autoRanging="true" maxHeight="10" side="LEFT" animated="true" />
-        </yAxis>
-    </BarChart>
-    <LineChart fx:id="responseTimeChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="1" title="Response time by Node (gRPC)">
-        <xAxis>
-            <NumberAxis fx:id="responseTimeChartGRPCTimeAxis" label="Elapsed Time (hh:mm:ss)" side="BOTTOM" animated="true" />
-        </xAxis>
-        <yAxis>
-            <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />
-        </yAxis>
-    </LineChart>
+<!--    <LineChart fx:id="responseTimeChartREST" GridPane.rowIndex="2" GridPane.columnIndex="1" title="Response time by Node (REST)">-->
+<!--        <xAxis>-->
+<!--            <NumberAxis fx:id="responseTimeChartRESTTimeAxis" label="Elapsed Time (hh:mm:ss)" side="BOTTOM" animated="true" />-->
+<!--        </xAxis>-->
+<!--        <yAxis>-->
+<!--            <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />-->
+<!--        </yAxis>-->
+<!--    </LineChart>-->
+<!--    <BarChart fx:id="nodeHitChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="0" title="Hits by Node (gRPC)" barGap="10">-->
+<!--        <xAxis>-->
+<!--            <CategoryAxis id="categoryAxis" label="Node" side="BOTTOM" animated="false" />-->
+<!--        </xAxis>-->
+<!--        <yAxis>-->
+<!--            <NumberAxis id="numberAxis" label="Hits" autoRanging="true" maxHeight="10" side="LEFT" animated="true" />-->
+<!--        </yAxis>-->
+<!--    </BarChart>-->
+<!--    <LineChart fx:id="responseTimeChartGRPC" GridPane.rowIndex="3" GridPane.columnIndex="1" title="Response time by Node (gRPC)">-->
+<!--        <xAxis>-->
+<!--            <NumberAxis fx:id="responseTimeChartGRPCTimeAxis" label="Elapsed Time (hh:mm:ss)" side="BOTTOM" animated="true" />-->
+<!--        </xAxis>-->
+<!--        <yAxis>-->
+<!--            <NumberAxis id="numberAxis" label="Response Time (ms)" autoRanging="true" side="LEFT" animated="false" />-->
+<!--        </yAxis>-->
+<!--    </LineChart>-->
     <Separator GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2" prefWidth="Infinity" />
     <GridPane GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2">
         <HBox spacing="10" alignment="BASELINE_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="0">
             <Label text="REST URL:" />
             <TextField fx:id="tfRESTURL" prefWidth="300" />
             <Label text="" prefWidth="20" />
-            <Label text="gRPC URL:"/>
-            <TextField fx:id="tfGRPCURL" prefWidth="300" />
-            <Label text="" prefWidth="20" />
+<!--            <Label text="gRPC URL:"/>-->
+<!--            <TextField fx:id="tfGRPCURL" prefWidth="300" />-->
+<!--            <Label text="" prefWidth="20" />-->
             <CheckBox fx:id="cbDemoMode">Demo Mode</CheckBox>
         </HBox>
         <Separator orientation="VERTICAL" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />

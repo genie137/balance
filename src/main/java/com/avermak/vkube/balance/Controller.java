@@ -21,37 +21,37 @@ import java.util.ArrayList;
 public class Controller implements Runnable {
     @FXML
     private BarChart<String, Integer> nodeHitChartREST;
-    @FXML
-    private BarChart<String, Integer> nodeHitChartGRPC;
-    @FXML
-    private LineChart<Integer, Integer> responseTimeChartREST;
-    @FXML
-    public NumberAxis responseTimeChartRESTTimeAxis;
-    @FXML
-    private LineChart<Integer, Integer> responseTimeChartGRPC;
-    @FXML
-    public NumberAxis responseTimeChartGRPCTimeAxis;
+//    @FXML
+//    private BarChart<String, Integer> nodeHitChartGRPC;
+//    @FXML
+//    private LineChart<Integer, Integer> responseTimeChartREST;
+//    @FXML
+//    public NumberAxis responseTimeChartRESTTimeAxis;
+//    @FXML
+//    private LineChart<Integer, Integer> responseTimeChartGRPC;
+//    @FXML
+//    public NumberAxis responseTimeChartGRPCTimeAxis;
     @FXML
     private Button buttonStartStop;
     @FXML
     private Button buttonExit;
     @FXML
     public TextField tfRESTURL;
-    @FXML
-    public TextField tfGRPCURL;
+//    @FXML
+//    public TextField tfGRPCURL;
     @FXML
     public CheckBox cbDemoMode;
     @FXML
     public Label infoLabel;
 
     private APIRunnerREST runnerREST = null;
-    private APIRunnerGRPC runnerGRPC = null;
+//    private APIRunnerGRPC runnerGRPC = null;
     private Thread uiUpdater = null;
     NodeHitData nodeHitDataREST = null;
-    NodeHitData nodeHitDataGRPC = null;
+//    NodeHitData nodeHitDataGRPC = null;
     ResponseTimeData responseTimeDataREST = null;
-    ResponseTimeData responseTimeDataGRPC = null;
-    int updateInterval = 1000; // ms
+//    ResponseTimeData responseTimeDataGRPC = null;
+    int updateInterval = 100; // ms
 
     @FXML
     public void initialize() {
@@ -66,20 +66,20 @@ public class Controller implements Runnable {
         nodeHitChartREST.setLegendVisible(false);
         nodeHitChartREST.getData().add(series);
 
-        this.nodeHitDataGRPC = new NodeHitData();
-        series = new XYChart.Series<>();
-        nodeHitChartGRPC.setLegendVisible(false);
-        nodeHitChartGRPC.getData().add(series);
+//        this.nodeHitDataGRPC = new NodeHitData();
+//        series = new XYChart.Series<>();
+//        nodeHitChartGRPC.setLegendVisible(false);
+//        nodeHitChartGRPC.getData().add(series);
 
         this.responseTimeDataREST = new ResponseTimeData("REST");
-        responseTimeChartREST.setLegendVisible(false);
-        responseTimeChartREST.setCreateSymbols(false);
-        responseTimeChartRESTTimeAxis.setTickLabelFormatter(new TimeAxisLabelConverter());
+//        responseTimeChartREST.setLegendVisible(false);
+//        responseTimeChartREST.setCreateSymbols(false);
+//        responseTimeChartRESTTimeAxis.setTickLabelFormatter(new TimeAxisLabelConverter());
 
-        this.responseTimeDataGRPC = new ResponseTimeData("gRPC");
-        responseTimeChartGRPC.setLegendVisible(false);
-        responseTimeChartGRPC.setCreateSymbols(false);
-        responseTimeChartGRPCTimeAxis.setTickLabelFormatter(new TimeAxisLabelConverter());
+//        this.responseTimeDataGRPC = new ResponseTimeData("gRPC");
+//        responseTimeChartGRPC.setLegendVisible(false);
+//        responseTimeChartGRPC.setCreateSymbols(false);
+//        responseTimeChartGRPCTimeAxis.setTickLabelFormatter(new TimeAxisLabelConverter());
 
         System.out.println("Starting UI Updater thread");
         this.uiUpdater = new Thread(this);
@@ -91,21 +91,21 @@ public class Controller implements Runnable {
         buttonStartStop.setUserData("stopped");
 
         tfRESTURL.setText(config.getUrlREST());
-        tfGRPCURL.setText(config.getUrlGRPC());
+//        tfGRPCURL.setText(config.getUrlGRPC());
         cbDemoMode.setSelected(config.isDemoMode());
         tfRESTURL.setDisable(config.isDemoMode());
-        tfGRPCURL.setDisable(config.isDemoMode());
+//        tfGRPCURL.setDisable(config.isDemoMode());
 
         tfRESTURL.textProperty().addListener((observable, oldValue, newValue) -> {
             Config.getInstance().setUrlREST(newValue);
         });
-        tfGRPCURL.textProperty().addListener((observable, oldValue, newValue) -> {
-            Config.getInstance().setUrlGRPC(newValue);
-        });
+//        tfGRPCURL.textProperty().addListener((observable, oldValue, newValue) -> {
+//            Config.getInstance().setUrlGRPC(newValue);
+//        });
         cbDemoMode.setOnAction(event -> {
             Config.getInstance().setDemoMode(cbDemoMode.isSelected());
             tfRESTURL.setDisable(cbDemoMode.isSelected());
-            tfGRPCURL.setDisable(cbDemoMode.isSelected());
+//            tfGRPCURL.setDisable(cbDemoMode.isSelected());
         });
     }
 
@@ -125,34 +125,37 @@ public class Controller implements Runnable {
                 this.runnerREST.scheduleStop();
                 this.runnerREST = null;
             }
-            if (this.runnerGRPC != null) {
-                System.out.println("Instructing gRPC runner to stop");
-                this.runnerGRPC.scheduleStop();
-                this.runnerGRPC = null;
-            }
+//            if (this.runnerGRPC != null) {
+//                System.out.println("Instructing gRPC runner to stop");
+//                this.runnerGRPC.scheduleStop();
+//                this.runnerGRPC = null;
+//            }
             System.out.println("Resetting action button states");
             buttonExit.setDisable(false);
             buttonStartStop.setText("Start");
             buttonStartStop.setUserData("stopped");
             tfRESTURL.setDisable(false);
-            tfGRPCURL.setDisable(false);
+//            tfGRPCURL.setDisable(false);
             cbDemoMode.setDisable(false);
+            nodeHitDataREST = new NodeHitData();
+            XYChart.Series<String, Integer> series = new XYChart.Series<>();
+            nodeHitChartREST.getData().set(0, series);
         } else {
             System.out.println("Creating API runner threads");
             this.runnerREST = new APIRunnerREST(this.nodeHitDataREST, this.responseTimeDataREST);
-            this.runnerGRPC = new APIRunnerGRPC(this.nodeHitDataGRPC, this.responseTimeDataGRPC);
+//            this.runnerGRPC = new APIRunnerGRPC(this.nodeHitDataGRPC, this.responseTimeDataGRPC);
             System.out.println("Setting action button states");
             buttonExit.setDisable(true);
             buttonStartStop.setText("Stop");
             buttonStartStop.setUserData("running");
             tfRESTURL.setDisable(true);
-            tfGRPCURL.setDisable(true);
+//            tfGRPCURL.setDisable(true);
             cbDemoMode.setDisable(true);
             System.out.println("Waking up UI updater thread");
             this.uiUpdater.interrupt();
             System.out.println("Starting runner threads.");
             this.runnerREST.start();
-            this.runnerGRPC.start();
+//            this.runnerGRPC.start();
         }
     }
 
@@ -168,9 +171,9 @@ public class Controller implements Runnable {
             if (now - lastUIUpdateAt > this.updateInterval) {
                 Platform.runLater(() -> {
                     updateHitChart(nodeHitChartREST, nodeHitDataREST);
-                    updateHitChart(nodeHitChartGRPC, nodeHitDataGRPC);
-                    updateResponseTimeChart(responseTimeChartREST, responseTimeDataREST);
-                    updateResponseTimeChart(responseTimeChartGRPC, responseTimeDataGRPC);
+//                    updateHitChart(nodeHitChartGRPC, nodeHitDataGRPC);
+//                    updateResponseTimeChart(responseTimeChartREST, responseTimeDataREST);
+//                    updateResponseTimeChart(responseTimeChartGRPC, responseTimeDataGRPC);
                 });
                 lastUIUpdateAt = now;
             }
